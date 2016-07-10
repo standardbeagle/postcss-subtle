@@ -1,0 +1,37 @@
+{
+  "name": "postcss-subtle",
+  "version": "1.0.0",
+  "description": "Loads subtle pattern files into css with a simple reference",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/standardbeagle/postcss-subtle.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel src --out-dir lib --watch --sourceMaps=true"
+  },
+  "babel": {
+    "presets": [
+      "es2017"
+    ],
+    "plugins": [
+      "transform-runtime"
+    ]
+  },
+  "author": "Standard Beagle Studio",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "6.10.1",
+    "babel-plugin-transform-runtime": "6.9.0",
+    "babel-preset-es2017": "1.4.0"
+  },
+  "dependencies": {
+    "fs": "0.0.2",
+    "jszip": "3.0.0",
+    "kefir": "3.2.6",
+    "postcss": "5.0.21",
+    "postcss-value-parser": "3.3.0",
+    "request": "2.72.0"
+  }
+}
