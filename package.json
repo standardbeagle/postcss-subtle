@@ -1,6 +1,6 @@
 {
   "name": "postcss-subtle",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "PostCSS plugin to automatically download and unzip images from subtlepatterns.com.",
   "keywords": [
     "postcss",
