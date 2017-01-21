@@ -3,6 +3,7 @@ import valueParser from 'postcss-value-parser';
 import request from 'request';
 import JSZip from 'jszip';
 import fs from 'fs';
+import urljoin from 'url-join';
 import kefir from 'kefir';
 
 /**
@@ -57,15 +58,15 @@ const walkStream = walkFunc => {
 /**
  * This postcss plugin takes a string in the form of background: subtle('name') and downloads and references the file "http://subtlepatterns2015.subtlepatterns.netdna-cdn.com/patterns/{name}.zip"
  * The two parameters are
- * @param base_output - the output folder for the image in the local file system
- * @param base_css - the location of the base folder for the image on the destination server
+ * @param options - localPath: the output folder for the image in the local file system
+ * 									serverPath: the location of the base folder for the image on the destination server
  * @type {Plugin<T>}
  */
-var subtle = postcss.plugin('postcss-subtle', function (local_directory, server_directory) {
+var subtle = postcss.plugin('postcss-subtle', function(options) {
     var longEmTest = /subtle/gi;
 
-    local_directory = local_directory || '';
-    server_directory = server_directory || '';
+    const localPath = options && options.localPath || '';
+    const serverPath = options && options.serverPath || '';
 
     return function (style, result) {
         walkStream(style.walkDecls.bind(style))
@@ -77,9 +78,9 @@ var subtle = postcss.plugin('postcss-subtle', function (local_directory, server_
                     .filter(node => node.type === 'function' && node.value === 'subtle')
                     .flatMap(node => {
                         const pattern_name = node.nodes[0].value;
-                        const download_url = 'http://subtlepatterns2015.subtlepatterns.netdna-cdn.com/patterns/' + pattern_name + '.zip';
-                        const site_url = server_directory + pattern_name + '.png';
-                        const local_path = local_directory + pattern_name + '.png';
+                        const download_url = 'https://subtlepatterns.com/patterns/' + pattern_name + '.zip';
+												const site_url = urljoin(serverPath, pattern_name + '.png');
+												const local_file_path = urljoin(localPath, pattern_name + '.png');
 
                         //Convert the node from a function call to a url reference with output file path.
                         node.value = 'url';
@@ -87,17 +88,18 @@ var subtle = postcss.plugin('postcss-subtle', function (local_directory, server_
                         //Once the nodes are updated, setting the decl value to the updated parser value is required for output.
                         decl.value = parsed.toString();
 
+												//Only download file if the local image isn't found.
                         return kefir
-                            .fromNodeCallback(cb => fs.stat(local_path, cb))
+                            .fromNodeCallback(cb => fs.stat(local_file_path, cb))
                             .flatMapErrors(() => downloadBuffer(download_url)
                                 .flatMap(buffer => kefir.fromPromise(JSZip.loadAsync(buffer)))
                                 .map(zip => zip.file(/png$/i))
                                 .flatten()
                                 .filter(file => (file.name.indexOf('MACOSX') < 0))
                                 .take(1)
-                                .flatMap(file => kefir.fromEvents(file.nodeStream().pipe(fs.createWriteStream(local_path)), 'finish')));
+                                .flatMap(file => kefir.fromEvents(file.nodeStream().pipe(fs.createWriteStream(local_file_path)), 'finish')));
                     });
-            }).onAny(x => x);
+            }).onError(x => console.err('postcss-subtle error', x));
     };
 });
 
