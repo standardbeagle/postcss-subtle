@@ -1,10 +1,11 @@
 # PostCSS Subtle [![Build Status][ci-img]][ci]
 
-[PostCSS] plugin to automatically download and unzip images from subtlepatterns.com..
+[PostCSS] plugin to automatically download and unzip images from [subtlepatterns.com]. I'm a fan of the images on the site and have used them in several of my projects, and wanted to give back by making it easier for others to quicly add some extra interest to their design.
 
 [PostCSS]: https://github.com/postcss/postcss
-[ci-img]:  https://travis-ci.org/andylbrummer/postcss-subtle.svg
-[ci]:      https://travis-ci.org/andylbrummer/postcss-subtle
+[ci-img]:  https://travis-ci.org/standardbeagle/postcss-subtle.svg
+[ci]:      https://travis-ci.org/standardbeagle/postcss-subtle
+[subtlepatterns.com]: https://subtlepatterns.com
 
 ```css
 .foo {
