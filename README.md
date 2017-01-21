@@ -19,6 +19,8 @@ Downloads the file at https://subtlepatterns.com/patterns/seigaiha.zip and extrc
 }
 ```
 
+When picking out the name of the zip file, the easiest way I've found is to hover over the download link because the name of the zip file on the site doesn't always match the name of the pattern displayed on the site.
+
 ## Usage
 
 ### Plugin options
